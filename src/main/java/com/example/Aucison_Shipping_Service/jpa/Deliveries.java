@@ -53,4 +53,12 @@ public class Deliveries {   //배송
         this.isCompleted = isCompleted;
         this.isStarted = isStarted;
     }
+
+    public void completeDelivery() {    //배송완료
+        this.isCompleted = true;
+    }
+
+    public void startDelivery() {   //배송시작
+        this.isStarted = true;
+    }
 }

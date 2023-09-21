@@ -1,6 +1,7 @@
 package com.example.Aucison_Shipping_Service.jpa;
 
 import com.example.Aucison_Shipping_Service.BaseTimeEntity;
+import com.example.Aucison_Shipping_Service.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,8 +24,8 @@ public class Orders extends BaseTimeEntity {   //주문 정보
     @Column(name = "members_code", nullable = false)
     private String email;   //구매자 이메일
 
-    @Column(name = "created_time", nullable = false)
-    private LocalDateTime createdTime;            //주문일자
+//    @Column(name = "created_time", nullable = false)
+//    private LocalDateTime createdTime;            //주문일자
 
     @Column(name = "status", nullable = false)
     private Enum status;   //주문상태(낙찰, 응찰, 패찰, 주문완료)
@@ -36,10 +37,15 @@ public class Orders extends BaseTimeEntity {   //주문 정보
 
     @Builder
     public Orders(Long productsId, String email,
-                  LocalDateTime createdTime, Enum status) {
+                  //LocalDateTime createdTime,
+                  Enum status) {
         this.productsId = productsId;
         this.email = email;
-        this.createdTime = createdTime;
+//        this.createdTime = createdTime;
+        this.status = status;
+    }
+
+    public void updateStatus(OrderStatus status) {  //status 변경
         this.status = status;
     }
 }
