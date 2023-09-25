@@ -18,7 +18,7 @@ public class DeliveriesServiceImpl implements DeliveriesService {
     }
 
     @Override
-    public Long saveDelivery(DeliveriesCreateDto deliveriesCreateDto) {
+    public Long saveDelivery(DeliveriesCreateDto deliveriesCreateDto) { //배송지 저장
         Deliveries delivery = Deliveries.builder()
                 .addrName(deliveriesCreateDto.getAddrName())
                 .zipNum(deliveriesCreateDto.getZipNum())
