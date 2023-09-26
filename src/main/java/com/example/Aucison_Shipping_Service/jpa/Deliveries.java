@@ -43,7 +43,8 @@ public class Deliveries {   //배송
     public Deliveries(String addrName,
                       String zipNum, String addr, String addrDetail,
                       String name, String tel,
-                      boolean isCompleted, boolean isStarted) {
+                      boolean isCompleted, boolean isStarted,
+                      Orders orders) {
         this.addrName = addrName;
         this.zipNum = zipNum;
         this.addr = addr;
@@ -52,6 +53,7 @@ public class Deliveries {   //배송
         this.tel = tel;
         this.isCompleted = isCompleted;
         this.isStarted = isStarted;
+        this.orders = orders;
     }
 
     public void completeDelivery() {    //배송완료

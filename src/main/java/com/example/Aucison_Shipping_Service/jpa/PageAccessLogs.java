@@ -1,7 +1,9 @@
 package com.example.Aucison_Shipping_Service.jpa;
 
 import com.example.Aucison_Shipping_Service.BaseTimeEntity;
+import com.example.Aucison_Shipping_Service.PageType;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,5 +32,13 @@ public class PageAccessLogs extends BaseTimeEntity {   //페이지 접근 로그
     private String email;   //이메일
 
     @Column(name = "page_type", nullable = false)
-    private String pageType;   //어떤 페이지에 접근했는지를 나타내는 타입 혹은 이름 (예: "상품상세", "가상결제페이지", "결제완료" 등)
+    @Enumerated(EnumType.STRING)
+    private PageType pageType;;   //어떤 페이지에 접근했는지를 나타내는 타입 혹은 이름 (예: "상품상세", "가상결제페이지", "결제완료")
+
+    @Builder
+    public PageAccessLogs(Long productsId, String email, PageType pageType) {
+        this.productsId = productsId;
+        this.email = email;
+        this.pageType = pageType;
+    }
 }

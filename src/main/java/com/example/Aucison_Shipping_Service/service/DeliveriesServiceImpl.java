@@ -17,22 +17,22 @@ public class DeliveriesServiceImpl implements DeliveriesService {
         this.deliveriesRepository = deliveriesRepository;
     }
 
-    @Override
-    public Long saveDelivery(DeliveriesCreateDto deliveriesCreateDto) { //배송지 저장
-        Deliveries delivery = Deliveries.builder()
-                .addrName(deliveriesCreateDto.getAddrName())
-                .zipNum(deliveriesCreateDto.getZipNum())
-                .addr(deliveriesCreateDto.getAddr())
-                .addrDetail(deliveriesCreateDto.getAddrDetail())
-                .name(deliveriesCreateDto.getName())
-                .tel(deliveriesCreateDto.getTel())
-                .isCompleted(deliveriesCreateDto.isCompleted())
-                .isStarted(deliveriesCreateDto.isStarted())
-                .build();
-
-        delivery = deliveriesRepository.save(delivery);
-        return delivery.getDeliveriesId();
-    }
+//    @Override
+//    public Long saveDelivery(DeliveriesCreateDto deliveriesCreateDto) { //배송지 저장
+//        Deliveries delivery = Deliveries.builder()
+//                .addrName(deliveriesCreateDto.getAddrName())
+//                .zipNum(deliveriesCreateDto.getZipNum())
+//                .addr(deliveriesCreateDto.getAddr())
+//                .addrDetail(deliveriesCreateDto.getAddrDetail())
+//                .name(deliveriesCreateDto.getName())
+//                .tel(deliveriesCreateDto.getTel())
+//                .isCompleted(deliveriesCreateDto.isCompleted())
+//                .isStarted(deliveriesCreateDto.isStarted())
+//                .build();
+//
+//        delivery = deliveriesRepository.save(delivery);
+//        return delivery.getDeliveriesId();
+//    }
 
     @Override
     @Transactional(readOnly = true)

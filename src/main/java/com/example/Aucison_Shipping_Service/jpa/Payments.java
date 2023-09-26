@@ -32,8 +32,9 @@ public class Payments extends BaseTimeEntity { //결제
 
 
     @Builder
-    public Payments(float cost, LocalDateTime createdTime) {
+    public Payments(float cost, LocalDateTime createdTime, Orders orders) {
         this.cost = cost;
         this.createdTime = createdTime;
+        this.orders = orders;
     }
 }

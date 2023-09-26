@@ -4,13 +4,13 @@ import com.example.Aucison_Shipping_Service.dto.deliveries.DeliveriesCreateDto;
 import com.example.Aucison_Shipping_Service.dto.deliveries.DeliveriesResponseDto;
 
 public interface DeliveriesService {
-    /**
-     * 새 배송 정보를 저장한다.
-     *
-     * @param deliveriesCreateDto 배송 정보
-     * @return 저장된 배송 정보의 ID
-     */
-    Long saveDelivery(DeliveriesCreateDto deliveriesCreateDto);
+//    /**
+//     * 새 배송 정보를 저장한다.
+//     *
+//     * @param deliveriesCreateDto 배송 정보
+//     * @return 저장된 배송 정보의 ID
+//     */
+//    Long saveDelivery(DeliveriesCreateDto deliveriesCreateDto);
 
     /**
      * 주어진 주문 ID를 기반으로 배송지 정보를 조회합니다.

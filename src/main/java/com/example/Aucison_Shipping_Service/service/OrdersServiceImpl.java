@@ -27,23 +27,23 @@ public class OrdersServiceImpl implements OrdersService{
         this.productServiceClient = productServiceClient;
     }
 
-    @Transactional
-    @Override
-    public Long saveOrder(OrdersCreateDto ordersCreateDto) {
-        // DTO로부터 새로운 Orders 엔터티를 생성합니다.
-        Orders orders = Orders.builder()
-                .productsId(ordersCreateDto.getProductsId())
-                .email(ordersCreateDto.getEmail())
-//                .createdTime(LocalDateTime.now()) // BaseTimeEntity를 기반으로 자동 생성될 수 있습니다.
-                .status(ordersCreateDto.getStatus())
-                .build();
-
-        // 데이터베이스에 저장합니다.
-        Orders savedOrder = ordersRepository.save(orders);
-
-        // 저장된 주문의 ID를 반환합니다.
-        return savedOrder.getOrdersId();
-    }
+//    @Transactional
+//    @Override
+//    public Long saveOrder(OrdersCreateDto ordersCreateDto) {
+//        // DTO로부터 새로운 Orders 엔터티를 생성합니다.
+//        Orders orders = Orders.builder()
+//                .productsId(ordersCreateDto.getProductsId())
+//                .email(ordersCreateDto.getEmail())
+////                .createdTime(LocalDateTime.now()) // BaseTimeEntity를 기반으로 자동 생성될 수 있습니다.
+//                .status(ordersCreateDto.getStatus())
+//                .build();
+//
+//        // 데이터베이스에 저장합니다.
+//        Orders savedOrder = ordersRepository.save(orders);
+//
+//        // 저장된 주문의 ID를 반환합니다.
+//        return savedOrder.getOrdersId();
+//    }
 
     @Override
     @Transactional(readOnly = true)
@@ -64,23 +64,23 @@ public class OrdersServiceImpl implements OrdersService{
         return convertToDto(order);
     }
 
-    @Transactional
-    @Override
-    public void deleteOrder(Long ordersId) {
-        // 해당 ID의 주문이 있는지 확인
-        /**
-         * Optional은 Java 8에서 도입된 클래스로, null을 직접 다루는 대신 감싸서 다룰 수 있게 해줍니다.
-         * 이를 통해 명시적으로 해당 값이 존재할 수도, 존재하지 않을 수도 있다는 것을 코드 상에서 바로 알 수 있게 됩니다.
-         * 또한, Optional은 여러가지 유용한 메서드를 제공하여 null 체크 로직을 더 간결하고 가독성 좋게 작성할 수 있게 도와줍니다.
-         */
-        Optional<Orders> optionalOrder = ordersRepository.findById(ordersId);
-        if (optionalOrder.isEmpty()) {
-            throw new NoSuchElementException("No order found with ID " + ordersId);
-        }
-
-        // 주문 삭제
-        ordersRepository.deleteById(ordersId);
-    }
+//    @Transactional
+//    @Override
+//    public void deleteOrder(Long ordersId) {
+//        // 해당 ID의 주문이 있는지 확인
+//        /**
+//         * Optional은 Java 8에서 도입된 클래스로, null을 직접 다루는 대신 감싸서 다룰 수 있게 해줍니다.
+//         * 이를 통해 명시적으로 해당 값이 존재할 수도, 존재하지 않을 수도 있다는 것을 코드 상에서 바로 알 수 있게 됩니다.
+//         * 또한, Optional은 여러가지 유용한 메서드를 제공하여 null 체크 로직을 더 간결하고 가독성 좋게 작성할 수 있게 도와줍니다.
+//         */
+//        Optional<Orders> optionalOrder = ordersRepository.findById(ordersId);
+//        if (optionalOrder.isEmpty()) {
+//            throw new NoSuchElementException("No order found with ID " + ordersId);
+//        }
+//
+//        // 주문 삭제
+//        ordersRepository.deleteById(ordersId);
+//    }
 
     private OrdersResponseDto convertToDto(Orders order) { // 주문 정보(Orders)를 응답용 DTO로 변환하는 메서드
         //products_id로 product 정보를 가져옴

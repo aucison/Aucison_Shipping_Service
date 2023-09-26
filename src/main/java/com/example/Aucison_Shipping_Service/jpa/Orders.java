@@ -28,7 +28,8 @@ public class Orders extends BaseTimeEntity {   //주문 정보
 //    private LocalDateTime createdTime;            //주문일자
 
     @Column(name = "status", nullable = false)
-    private Enum status;   //주문상태(낙찰, 응찰, 패찰, 주문완료)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;   //주문상태(낙찰, 응찰, 패찰, 주문완료)
 
     @OneToOne(mappedBy = "orders")
     private Payments payments;
@@ -38,7 +39,7 @@ public class Orders extends BaseTimeEntity {   //주문 정보
     @Builder
     public Orders(Long productsId, String email,
                   //LocalDateTime createdTime,
-                  Enum status) {
+                  OrderStatus status) {
         this.productsId = productsId;
         this.email = email;
 //        this.createdTime = createdTime;
