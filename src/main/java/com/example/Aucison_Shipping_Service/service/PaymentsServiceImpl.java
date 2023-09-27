@@ -9,6 +9,8 @@ import com.example.Aucison_Shipping_Service.dto.client.UpdateCreditRequestDto;
 import com.example.Aucison_Shipping_Service.dto.client.VirtualPaymentProductInfoResponseDto;
 import com.example.Aucison_Shipping_Service.dto.payments.PaymentsRequestDto;
 import com.example.Aucison_Shipping_Service.dto.payments.VirtualPaymentResponseDto;
+import com.example.Aucison_Shipping_Service.exception.AppException;
+import com.example.Aucison_Shipping_Service.exception.ErrorCode;
 import com.example.Aucison_Shipping_Service.jpa.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,7 +60,7 @@ public class PaymentsServiceImpl implements PaymentsService {
             //비경매 상품
             return getSaleVirtualPaymentInfo(productsId, email, addrName);
         } else {
-            throw new RuntimeException("해당 카테고리(경매/판매)가 존재하지 않습니다.");
+            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
         }
     }
 
@@ -98,7 +100,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         //가상 결제 페이지 접근 로그 생성 전에 체크
         LocalDateTime accessTime = LocalDateTime.now();
         if(!isBeforeAuctionEndDate(productsId, accessTime)) {
-            throw new IllegalStateException("경매가 이미 종료되었습니다.");
+            throw new AppException(ErrorCode.AUCTION_ENDED);
         }
 
         //가상 결제 페이지 접근 로그 생성
@@ -126,7 +128,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         //가상 결제 페이지 탈출 로그 생성 전에 체크
         LocalDateTime exitTime = LocalDateTime.now();
         if(!isBeforeAuctionEndDate(productsId, exitTime)) {
-            throw new IllegalStateException("경매가 이미 종료되었습니다.");
+            throw new AppException(ErrorCode.AUCTION_ENDED);
         }
 
         logPageExit(logId);
@@ -151,7 +153,7 @@ public class PaymentsServiceImpl implements PaymentsService {
     private AddrInfoResponseDto fetchShippingInfo(String email, String addrName) {  //배송지명으로 배송지 조회
         AddrInfoResponseDto addrInfoResponseDto = memberServiceClient.getShippingInfo(email, addrName);
         if (addrInfoResponseDto == null) {
-            throw new RuntimeException("배송지를 새로 등록해주세요.");
+            throw new AppException(ErrorCode.SHIPPING_INFO_NOT_FOUND);
         }
         return addrInfoResponseDto;
     }
@@ -163,7 +165,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         } else if ("AUCS".equals(paymentsRequestDto.getCategory())) {    //경매
             return saveAucsPayment(paymentsRequestDto);
         } else {
-            throw new IllegalArgumentException("유효하지 않은 카테고리: " + paymentsRequestDto.getCategory());
+            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
         }
     }
 
@@ -219,16 +221,13 @@ public class PaymentsServiceImpl implements PaymentsService {
         //TODO: 3분 연장 로직, status 판단 로직
         LocalDateTime accessTime = LocalDateTime.now();
         if (!isBeforeAuctionEndDate(paymentsRequestDto.getProductsId(), accessTime)) {
-            throw new IllegalStateException("경매가 이미 종료되었습니다.");
+            throw new AppException(ErrorCode.AUCTION_ENDED);
         }
 
         //결제 페이지 접근 로그 생성
         Long logId = logPageAccess(paymentsRequestDto.getProductsId(), paymentsRequestDto.getEmail(),
                 PageType.PAYMENT_COMPLETED);
 
-        /**
-         *
-         */
 
         // Orders 정보 저장
         Orders order = Orders.builder()
@@ -334,7 +333,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         //가상 결제 페이지 탈출 로그 생성 전에 체크
         LocalDateTime exitTime = LocalDateTime.now();
         if(!isBeforeAuctionEndDate(paymentsRequestDto.getProductsId(), exitTime)) {
-            throw new IllegalStateException("경매가 이미 종료되었습니다.");
+            throw new AppException(ErrorCode.AUCTION_ENDED);
         }
 
         logPageExit(logId);
@@ -358,7 +357,7 @@ public class PaymentsServiceImpl implements PaymentsService {
     public void logPageExit(Long logId) {
         // logId는 페이지 접근 시 저장된 로그의 ID
         PageAccessLogs existingLog = pageAccessLogsRepository.findById(logId)
-                .orElseThrow(() -> new IllegalArgumentException("로그를 찾을 수 없습니다.: " + logId));
+                .orElseThrow(() -> new AppException(ErrorCode.LOG_NOT_FOUND));
         // BaseTimeEntity의 modifiedDate는 자동으로 갱신
         // JpaRepository의 save 메서드를 호출하여 로그를 갱신
         pageAccessLogsRepository.save(existingLog);

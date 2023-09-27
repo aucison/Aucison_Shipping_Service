@@ -4,6 +4,8 @@ import com.example.Aucison_Shipping_Service.client.ProductServiceClient;
 import com.example.Aucison_Shipping_Service.dto.client.ProductInfoResponseDto;
 import com.example.Aucison_Shipping_Service.dto.orders.OrdersCreateDto;
 import com.example.Aucison_Shipping_Service.dto.orders.OrdersResponseDto;
+import com.example.Aucison_Shipping_Service.exception.AppException;
+import com.example.Aucison_Shipping_Service.exception.ErrorCode;
 import com.example.Aucison_Shipping_Service.jpa.Orders;
 import com.example.Aucison_Shipping_Service.jpa.OrdersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,10 @@ public class OrdersServiceImpl implements OrdersService{
     public List<OrdersResponseDto> findAllOrdersByEmail(String email) { //email로 주문내역 전체 조회
         List<Orders> orders = ordersRepository.findAllByEmail(email);
 
+        if (orders.isEmpty()) {
+            throw new AppException(ErrorCode.ORDER_NOT_FOUND);
+        }
+
         // 각 주문을 DTO로 변환하여 리스트로 반환한다.
         return orders.stream().map(this::convertToDto).collect(Collectors.toList());
     }
@@ -58,7 +64,7 @@ public class OrdersServiceImpl implements OrdersService{
     @Transactional(readOnly = true)
     public OrdersResponseDto findOrderByOrdersId(Long ordersId) { // ordersId로 주문내역 개별 조회
         // 주어진 ID를 가진 주문 정보를 찾는다. 찾지 못할 경우 RuntimeException 발생
-        Orders order = ordersRepository.findById(ordersId).orElseThrow(() -> new RuntimeException("Order not found"));
+        Orders order = ordersRepository.findById(ordersId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         // 주문 정보를 DTO로 변환하여 반환한다.
         return convertToDto(order);

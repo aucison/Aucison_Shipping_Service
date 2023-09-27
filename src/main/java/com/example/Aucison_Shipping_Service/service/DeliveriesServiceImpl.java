@@ -2,6 +2,8 @@ package com.example.Aucison_Shipping_Service.service;
 
 import com.example.Aucison_Shipping_Service.dto.deliveries.DeliveriesCreateDto;
 import com.example.Aucison_Shipping_Service.dto.deliveries.DeliveriesResponseDto;
+import com.example.Aucison_Shipping_Service.exception.AppException;
+import com.example.Aucison_Shipping_Service.exception.ErrorCode;
 import com.example.Aucison_Shipping_Service.jpa.Deliveries;
 import com.example.Aucison_Shipping_Service.jpa.DeliveriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,10 @@ public class DeliveriesServiceImpl implements DeliveriesService {
     public DeliveriesResponseDto getDeliveryByOrdersId(Long ordersId) {
         //orders_id로 배송지 정보 조회
         Deliveries delivery = deliveriesRepository.findByOrdersOrdersId(ordersId);
+
+        if (delivery == null) {
+            throw new AppException(ErrorCode.DELIVERY_NOT_FOUND);
+        }
 
         return DeliveriesResponseDto.builder()
                 .addrName(delivery.getAddrName())
